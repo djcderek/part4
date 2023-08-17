@@ -77,6 +77,29 @@ test('id property exists', async () => {
     expect(response.body[0].id).toBeDefined()
 })
 
+test('HTTP POST request works', async () => {
+  const newBlog = {
+    title: 'New Blog',
+    author: 'New Author',
+    url: 'New URL',
+    likes: 5
+  }
+
+  await api
+    .post('/api/blogs')
+    .send(newBlog)
+    .expect(201)
+    .expect('Content-Type', /application\/json/)
+
+  const blogsAtEnd = await Blog.find({})
+  blogsAtEnd.map(blog => blog.toJSON())
+  //const blogsAtEnd = await api.get('/api/blogs')
+  expect(blogsAtEnd).toHaveLength(3)
+
+  const title = blogsAtEnd.map(blog => blog.title)
+  expect(title).toContain('New Blog')
+})
+
 afterAll(async () => {
     await mongoose.connection.close()
 })
