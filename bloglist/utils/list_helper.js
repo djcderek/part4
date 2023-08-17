@@ -45,7 +45,7 @@ const mostBlogs = (blogs) => {
 
 const mostLikes = (blogs) => {
      return blogs.reduce((mostLiked, currBlog) => {
-        console.log(mostLiked)
+        //console.log(mostLiked)
         if (currBlog.likes >= mostLiked.likes) {
             mostLiked.likes = currBlog.likes
             mostLiked.author = currBlog.author
