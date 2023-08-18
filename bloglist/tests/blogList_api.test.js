@@ -5,6 +5,7 @@ const app = require('../app')
 const api = supertest(app)
 
 const Blog = require('../models/blog')
+const { application } = require('express')
 
 const blogs = [
     {
@@ -115,6 +116,18 @@ test('likes are defualted to zero if missing', async () => {
 
   const addedBlog = await Blog.findOne({title: 'Without likes'})
   expect(addedBlog.likes).toBe(0)
+})
+
+test('cannot add note without title or url', async () => {
+  const newBlog = {
+    author: 'Titleless',
+    likes: 5
+  }
+
+  await api
+    .post('/api/blogs')
+    .send(newBlog)
+    .expect(400)
 })
 
 afterAll(async () => {

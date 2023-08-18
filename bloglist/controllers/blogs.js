@@ -7,13 +7,19 @@ blogRouter.get('/', async (request, response) => {
 })
 
 blogRouter.post('/', async (request, response) => {
-    if (!request.body.likes) {
-        request.body.likes = 0
-    }
-    const blog = new Blog(request.body)
+    try {
+        if (!request.body.likes) {
+            request.body.likes = 0
+        }
+        const blog = new Blog(request.body)
 
-    const result = await blog.save()
-    response.status(201).json(result)
+        const result = await blog.save()
+        response.status(201).json(result)
+    } catch(exception) {
+        if (exception.name === 'ValidationError') {
+            response.status(400).json({exception: exception.message})
+        } 
+    }
 })
 
 module.exports = blogRouter
