@@ -100,6 +100,23 @@ test('HTTP POST request works', async () => {
   expect(title).toContain('New Blog')
 })
 
+test('likes are defualted to zero if missing', async () => {
+  const newBlog = {
+    title: 'Without likes',
+    author: 'Doesnt get likes',
+    url: 'Sadnesss'
+  }
+
+  await api
+    .post('/api/blogs')
+    .send(newBlog)
+    .expect(201)
+    .expect('Content-Type', /application\/json/)
+
+  const addedBlog = await Blog.findOne({title: 'Without likes'})
+  expect(addedBlog.likes).toBe(0)
+})
+
 afterAll(async () => {
     await mongoose.connection.close()
 })
