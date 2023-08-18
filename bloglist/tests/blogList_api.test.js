@@ -148,6 +148,32 @@ test('can delete note', async () => {
   expect(titles).not.toContain(blogToDelete.title)
 })
 
+test('can update note', async () => {
+  const allBlogs = await Blog.find({})
+  //console.log(allBlogs)
+  allBlogs.map(blog => blog.toJSON())
+  //console.log(allBlogs)
+
+  const blogToUpdate = allBlogs[0]
+  const updatedBlog = {...blogToUpdate._doc, likes: 100}
+  //console.log(blogToUpdate._doc)
+
+  console.log(updatedBlog)
+
+  await api
+    .put(`/api/blogs/${blogToUpdate.id}`)
+    .send(updatedBlog)
+    .expect(200)
+
+  const afterBlogs = await Blog.find({})
+  afterBlogs.map(blogs => blogs.toJSON())
+  const likes = afterBlogs.map(blog => blog.likes)
+
+  //console.log()
+  
+  expect(likes).toContain(100)
+})
+
 afterAll(async () => {
     await mongoose.connection.close()
 })
