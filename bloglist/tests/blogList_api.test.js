@@ -130,6 +130,24 @@ test('cannot add note without title or url', async () => {
     .expect(400)
 })
 
+test('can delete note', async () => {
+  const beforeBlogs = await Blog.find({})
+  beforeBlogs.map(blog => blog.toJSON())
+
+  const blogToDelete = beforeBlogs[0]
+
+  await api
+    .delete(`/api/blogs/${blogToDelete.id}`)
+    .expect(204)
+
+  const afterBlog = await Blog.find({})
+  afterBlog.map(blog => blog.toJSON())
+  expect(afterBlog).toHaveLength(beforeBlogs.length - 1)
+
+  const titles = afterBlog.map(blog => blog.title)
+  expect(titles).not.toContain(blogToDelete.title)
+})
+
 afterAll(async () => {
     await mongoose.connection.close()
 })
