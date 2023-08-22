@@ -5,6 +5,10 @@ const User = require('../models/users')
 usersRouter.post('/', async (request, response) => {
     const { username, name, password } = request.body
 
+    if (password.length < 3) {
+        return response.status(400).json({ error: 'Password too short' })
+    }
+
     const passworHash = await bcrypt.hash(password, 10)
 
     const user = new User({
@@ -13,9 +17,12 @@ usersRouter.post('/', async (request, response) => {
         passworHash
     })
 
-    const savedUser = await user.save()
-
-    response.status(201).json(savedUser)
+    try {
+        const savedUser = await user.save()
+        response.status(201).json(savedUser)
+    } catch(exception) {
+        response.status(400).json({ error: exception.name })
+    }
 })
 
 usersRouter.get('/', async (request, response) => {

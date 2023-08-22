@@ -19,3 +19,12 @@ Content-Type: application/json
     "name": "derek chan",
     "password": "password"
 }
+###
+POST http://localhost:3003/api/users
+Content-Type: application/json
+
+{
+    "username": "ro",
+    "name": "user",
+    "password": "passs"
+}

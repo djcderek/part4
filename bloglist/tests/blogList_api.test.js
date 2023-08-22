@@ -5,6 +5,7 @@ const app = require('../app')
 const api = supertest(app)
 
 const Blog = require('../models/blog')
+const User = require('../models/users')
 const { application } = require('express')
 
 const blogs = [
@@ -44,6 +45,14 @@ const blogs = [
       url: "http://blog.cleancoder.com/uncle-bob/2016/05/01/TypeWars.html",
       likes: 2
     }  
+]
+
+const users = [
+  {
+    username: 'root',
+    name: 'user',
+    password: 'password'
+  }
 ]
 
 beforeAll(async () => {
@@ -158,7 +167,7 @@ test('can update note', async () => {
   const updatedBlog = {...blogToUpdate._doc, likes: 100}
   //console.log(blogToUpdate._doc)
 
-  console.log(updatedBlog)
+  //console.log(updatedBlog)
 
   await api
     .put(`/api/blogs/${blogToUpdate.id}`)
@@ -172,6 +181,61 @@ test('can update note', async () => {
   //console.log()
   
   expect(likes).toContain(100)
+})
+
+describe('testing users', () => {
+  beforeAll(async () => {
+    await User.deleteMany({})
+
+    const firstUser = new User(users[0])
+    await firstUser.save()
+  })
+
+  test('username cannot be too short', async () => {
+    const beforeUsers = await User.find({})
+    const jsonBeforeUsers =beforeUsers.map(user => user.toJSON())
+    console.log(jsonBeforeUsers)
+    console.log(beforeUsers)
+
+    const user = {
+      username: 'a',
+      name: 'name',
+      password: 'password'
+    }
+
+    await api
+      .post('/api/users', )
+      .send(user)
+      .expect(400)
+
+    const afterUsers = await User.find({})
+    const jsonAfterUsers = afterUsers.map(user => user.toJSON())
+
+    expect(jsonAfterUsers.length).toBe(jsonBeforeUsers.length)
+  })
+
+  test('password cannot be too short', async () => {
+    const beforeUsers = await User.find({})
+    const jsonBeforeUsers =beforeUsers.map(user => user.toJSON())
+    console.log(jsonBeforeUsers)
+    console.log(beforeUsers)
+
+    const user = {
+      username: 'longusername',
+      name: 'name',
+      password: 'p'
+    }
+
+    await api
+      .post('/api/users', )
+      .send(user)
+      .expect(400)
+
+    const afterUsers = await User.find({})
+    const jsonAfterUsers = afterUsers.map(user => user.toJSON())
+
+    expect(jsonAfterUsers.length).toBe(jsonBeforeUsers.length)
+  })
 })
 
 afterAll(async () => {
