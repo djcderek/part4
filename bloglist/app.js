@@ -8,10 +8,12 @@ const blogRouter = require('./controllers/blogs')
 const usersRouter = require('./controllers/users')
 const loginRouter = require('./controllers/login')
 const {PORT, MONGODB_URI} = require('./utils/config')
+const middleware = require('./utils/middleware')
 
 //const mongoUrl = process.env.MONGODB_URI
 mongoose.connect(MONGODB_URI)
 
+app.use(middleware.tokenExtractor)
 app.use(cors())
 app.use(express.json())
 
