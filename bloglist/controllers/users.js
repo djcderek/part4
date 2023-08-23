@@ -9,12 +9,12 @@ usersRouter.post('/', async (request, response) => {
         return response.status(400).json({ error: 'Password too short' })
     }
 
-    const passworHash = await bcrypt.hash(password, 10)
+    const passwordHash = await bcrypt.hash(password, 10)
 
     const user = new User({
         username,
         name,
-        passworHash
+        passwordHash
     })
 
     try {

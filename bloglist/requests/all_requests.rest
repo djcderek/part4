@@ -15,7 +15,7 @@ POST http://localhost:3003/api/users
 Content-Type: application/json
 
 {
-    "username": "derekchan",
+    "username": "dchan",
     "name": "derek chan",
     "password": "password"
 }
@@ -38,4 +38,12 @@ Content-Type: application/json
     "URL": "sdfsdf",
     "likes": 12,
     "userId": "64e52fb17568f6e3c6a45da9"
+}
+###
+POST http://localhost:3003/api/login
+Content-Type: application/json
+
+{
+    "username": "dchan",
+    "password": "password"
 }
