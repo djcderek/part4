@@ -1,6 +1,15 @@
 const blogRouter = require('express').Router()
 const Blog = require('../models/blog')
 const User = require('../models/user')
+const jwt = require('jsonwebtoken')
+
+const getTokenFrom = request => {
+    const authorization = request.get('authorization')
+    if (authorization && authorization.startsWith('Bearer ')) {
+        return authorization.replace('Bearer ', '')
+    }
+    return null
+}
 
 blogRouter.get('/', async (request, response) => {
     const blogs = await Blog.find({}).populate('users', { username: 1, name: 1, id: 1})
@@ -13,7 +22,12 @@ blogRouter.post('/', async (request, response) => {
             request.body.likes = 0
         }
         const body = request.body
-        const user = await User.findById(body.userId)
+        const decodedToken = jwt.verify(getTokenFrom(request), process.env.SECRET)
+        if (!decodedToken.id) {
+            return response.status(401).json({ error: 'invalid token'})
+        }
+        const user = await User.findById(decodedToken.id)
+        //const user = await User.findById(body.userId)
         console.log(user)
 
         //const blog = new Blog(request.body)
@@ -33,8 +47,10 @@ blogRouter.post('/', async (request, response) => {
         response.status(201).json(result)
     } catch(exception) {
         if (exception.name === 'ValidationError') {
-            response.status(400).json({exception: exception.message})
-        } 
+            response.status(400).json({error: exception.message})
+        } else if (exception.name === 'JsonWebTokenError') {
+            response.status(400).json({ error: exception.message})
+        }
     }
 })
 
