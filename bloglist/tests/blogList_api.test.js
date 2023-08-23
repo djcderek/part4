@@ -5,7 +5,7 @@ const app = require('../app')
 const api = supertest(app)
 
 const Blog = require('../models/blog')
-const User = require('../models/users')
+const User = require('../models/user')
 const { application } = require('express')
 
 const blogs = [
@@ -194,8 +194,8 @@ describe('testing users', () => {
   test('username cannot be too short', async () => {
     const beforeUsers = await User.find({})
     const jsonBeforeUsers =beforeUsers.map(user => user.toJSON())
-    console.log(jsonBeforeUsers)
-    console.log(beforeUsers)
+    //console.log(jsonBeforeUsers)
+    //console.log(beforeUsers)
 
     const user = {
       username: 'a',
@@ -217,8 +217,8 @@ describe('testing users', () => {
   test('password cannot be too short', async () => {
     const beforeUsers = await User.find({})
     const jsonBeforeUsers =beforeUsers.map(user => user.toJSON())
-    console.log(jsonBeforeUsers)
-    console.log(beforeUsers)
+    //console.log(jsonBeforeUsers)
+    //console.log(beforeUsers)
 
     const user = {
       username: 'longusername',

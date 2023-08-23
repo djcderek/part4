@@ -28,3 +28,14 @@ Content-Type: application/json
     "name": "user",
     "password": "passs"
 }
+###
+POST http://localhost:3003/api/blogs
+Content-Type: application/json
+
+{
+    "title": "dereks blog for testing",
+    "author": "derek",
+    "URL": "sdfsdf",
+    "likes": 12,
+    "userId": "64e52fb17568f6e3c6a45da9"
+}
