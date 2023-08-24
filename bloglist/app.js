@@ -14,6 +14,7 @@ const middleware = require('./utils/middleware')
 mongoose.connect(MONGODB_URI)
 
 app.use(middleware.tokenExtractor)
+app.use(middleware.userExtractor)
 app.use(cors())
 app.use(express.json())
 
