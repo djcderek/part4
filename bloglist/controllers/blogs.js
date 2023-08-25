@@ -29,7 +29,7 @@ blogRouter.post('/', async (request, response) => {
         }
         const user = request.user//await User.findById(decodedToken.id)
         //const user = await User.findById(body.userId)
-        console.log(user)
+        //console.log(user)
 
         //const blog = new Blog(request.body)
         const blog = new Blog({
@@ -41,7 +41,7 @@ blogRouter.post('/', async (request, response) => {
         })
 
         const result = await blog.save()
-        console.log(result._id)
+        //console.log(result._id)
         user.blog = user.blog.concat(result.id)
         await user.save()
         //user
@@ -50,7 +50,7 @@ blogRouter.post('/', async (request, response) => {
         if (exception.name === 'ValidationError') {
             response.status(400).json({error: exception.message})
         } else if (exception.name === 'JsonWebTokenError') {
-            response.status(400).json({ error: exception.message})
+            response.status(401).json({ error: exception.message})
         }
     }
 })
@@ -64,7 +64,7 @@ blogRouter.delete('/:id', async (request, response) => {
         const user = await User.findById(decodedToken.id)
     
         const toDelete = await Blog.findById(request.params.id)
-        console.log(toDelete)
+        //console.log(toDelete)
         const canDelete = toDelete.users.toString() === user.id.toString()
     
         if (!canDelete) {
